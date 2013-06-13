@@ -6,11 +6,18 @@ app = Flask(__name__)
 from flask import request
 
 from Chifoumi import ChifoumiKiller
+from Tictactoe import TictactoeKiller
 
 
 @app.route("/chifoumi")
 def chifoumi():
     killer = ChifoumiKiller(request.args)
+    return killer.run()
+
+
+@app.route("/tictactoe")
+def tictactoe():
+    killer = TictactoeKiller(request.args)
     return killer.run()
 
 
