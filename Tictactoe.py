@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from random import choice as rchoice
-from random import randint
 
 import requests
 
@@ -109,7 +108,7 @@ class TictactoeKiller(object):
     def firstTurn(self):
         if self.turn == 1:
             print "##### FIRST TURN #####"
-            self.respond(randint(0, 8))
+            self.respond(rchoice([0, 2, 6, 8]))
             return True
         return False
 
