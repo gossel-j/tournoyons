@@ -97,10 +97,14 @@ class TictactoeKiller(object):
                 tray = self.tray[:]
                 tray[n] = self.me
                 r = self.tryComplete(self.me, tray)
-                if r and r[0] not in tmp:
-                        g.append(r[0])
+                if r:
+                    l = self.testFork(self.opp, tray)
+                    if l and r[0] not in l:
+                        g.append(n)
         if g:
             print "##### BLOCK FORK 2 #####"
+            print tmp
+            print g
             self.respond(rchoice(g))
             return True
         return False
