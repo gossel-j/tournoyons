@@ -1,0 +1,9 @@
+[Unit]
+Description=Tournoyons server
+
+[Service]
+User=jb
+ExecStart=/home/jb/tournoyons/tournoyons.py
+
+[Install]
+WantedBy=multi-user.target
