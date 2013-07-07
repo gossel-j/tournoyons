@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from random import choice as rchoice
+from sys import stderr
 
 import requests
+
+
+def prt(line):
+    stderr.write(line + "\n")
 
 
 class TictactoeKiller(object):
@@ -51,7 +56,7 @@ class TictactoeKiller(object):
     def tryWin(self):
         r = self.tryComplete(self.me, self.tray)
         if r:
-            print "##### WIN #####"
+            prt("##### WIN #####")
             self.respond(rchoice(r))
             return True
         return False
@@ -59,7 +64,7 @@ class TictactoeKiller(object):
     def tryBlock(self):
         r = self.tryComplete(self.opp, self.tray)
         if r:
-            print "##### BLOCK #####"
+            prt("##### BLOCK #####")
             self.respond(rchoice(r))
             return True
         return False
@@ -78,7 +83,7 @@ class TictactoeKiller(object):
     def tryFork(self):
         r = self.testFork(self.me, self.tray)
         if r:
-            print "##### FORK #####"
+            prt("##### FORK #####")
             self.respond(rchoice(r))
             return True
         return False
@@ -88,7 +93,7 @@ class TictactoeKiller(object):
         if len(tmp) == 0:
             return False
         if len(tmp) == 1:
-            print "##### BLOCK FORK 1 #####"
+            prt("##### BLOCK FORK 1 #####")
             self.respond(tmp[0])
             return True
         g = []
@@ -102,7 +107,7 @@ class TictactoeKiller(object):
                     if l and r[0] not in l:
                         g.append(n)
         if g:
-            print "##### BLOCK FORK 2 #####"
+            prt("##### BLOCK FORK 2 #####")
             print tmp
             print g
             self.respond(rchoice(g))
@@ -111,14 +116,37 @@ class TictactoeKiller(object):
 
     def firstTurn(self):
         if self.turn == 1:
-            print "##### FIRST TURN #####"
+            prt("##### FIRST TURN #####")
             self.respond(rchoice([0, 2, 6, 8]))
             return True
         return False
 
+    def specialThirdTurn(self):
+        if self.turn == 3:
+            opp_case = self.tray.index(self.opp)
+            my_case = self.tray.index(self.me)
+            if opp_case == 4:
+                for m, pos in [
+                        (0, 8),
+                        (2, 6),
+                        (6, 2),
+                        (8, 0)]:
+                    if my_case == m:
+                        prt("##### THIRD TURN 1 #####")
+                        self.respond(pos)
+                        return True
+            elif opp_case in (0, 2, 6, 8):
+                pos = [0, 2, 6, 8]
+                pos.remove(opp_case)
+                pos.remove(my_case)
+                prt("##### THIRD TURN 2 #####")
+                self.respond(rchoice(pos))
+                return True
+        return False
+
     def center(self):
         if self.tray[4] == 0:
-            print "##### CENTER #####"
+            prt("##### CENTER #####")
             self.respond(4)
             return True
         return False
@@ -135,7 +163,7 @@ class TictactoeKiller(object):
             if self.tray[a] == self.opp and self.tray[b] == 0:
                 r.append(b)
         if r:
-            print "##### OPPOSITE CORNER #####"
+            prt("##### OPPOSITE CORNER #####")
             self.respond(rchoice(r))
             return True
         return False
@@ -147,7 +175,7 @@ class TictactoeKiller(object):
             if self.tray[n] == 0:
                 r.append(n)
         if r:
-            print "##### CORNER #####"
+            prt("##### CORNER #####")
             self.respond(rchoice(r))
             return True
         return False
@@ -159,7 +187,7 @@ class TictactoeKiller(object):
             if self.tray[n] == 0:
                 r.append(n)
         if r:
-            print "##### SIDE #####"
+            prt("##### SIDE #####")
             self.respond(rchoice(r))
             return True
         return False
@@ -172,6 +200,7 @@ class TictactoeKiller(object):
                 self.tryFork,
                 self.tryBlockFork,
                 self.firstTurn,
+                self.specialThirdTurn,
                 self.center,
                 self.oppositeCorner,
                 self.emptyCorner,
