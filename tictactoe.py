@@ -1,16 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from random import choice as rchoice
-from sys import stderr
+from urllib import urlencode
 
-import requests
-
-
-def prt(line):
-    stderr.write(line + "\n")
+from twisted.web.resource import Resource
 
 
-class TictactoeKiller(object):
+class TictactoeKiller(Resource):
+    isLeaf = True
     winPos = [
         (0, 1, 2),
         (3, 4, 5),
@@ -22,22 +19,24 @@ class TictactoeKiller(object):
         (2, 4, 6)
     ]
 
-    def __init__(self, args):
-        self.referee = args.get("Referee")
-        self.moveId = args.get("MoveId")
-        self.game = args.get("Game")
-        self.tray = map(int, args.get("Tray", []))
-        self.turn = int(args.get("Turn", 0))
-        self.me = 1 if self.turn % 2 else 2
-        self.opp = 2 if self.turn % 2 else 1
+    def __init__(self, agent):
+        self.agent = agent
+        self.actions = [
+            self.tryWin,
+            self.tryBlock,
+            self.tryFork,
+            self.tryBlockFork,
+            self.firstTurn,
+            self.specialThirdTurn,
+            self.center,
+            self.oppositeCorner,
+            self.emptyCorner,
+            self.emptySide
+        ]
 
     def respond(self, pos):
         if self.referee is not None:
-            requests.get(self.referee, params={
-                "MoveId": self.moveId,
-                "Game": self.game,
-                "Value": pos + 1
-            })
+            self.agent.request('GET', '%s?%s' % (self.referee, urlencode({"MoveId": self.moveId, "Game": self.game, "Value": pos + 1})))
 
     def tryComplete(self, me, tray):
         r = []
@@ -56,7 +55,7 @@ class TictactoeKiller(object):
     def tryWin(self):
         r = self.tryComplete(self.me, self.tray)
         if r:
-            prt("##### WIN #####")
+            print "##### WIN #####"
             self.respond(rchoice(r))
             return True
         return False
@@ -64,7 +63,7 @@ class TictactoeKiller(object):
     def tryBlock(self):
         r = self.tryComplete(self.opp, self.tray)
         if r:
-            prt("##### BLOCK #####")
+            print "##### BLOCK #####"
             self.respond(rchoice(r))
             return True
         return False
@@ -83,7 +82,7 @@ class TictactoeKiller(object):
     def tryFork(self):
         r = self.testFork(self.me, self.tray)
         if r:
-            prt("##### FORK #####")
+            print "##### FORK #####"
             self.respond(rchoice(r))
             return True
         return False
@@ -93,7 +92,7 @@ class TictactoeKiller(object):
         if len(tmp) == 0:
             return False
         if len(tmp) == 1:
-            prt("##### BLOCK FORK 1 #####")
+            print "##### BLOCK FORK 1 #####"
             self.respond(tmp[0])
             return True
         g = []
@@ -107,16 +106,14 @@ class TictactoeKiller(object):
                     if l and r[0] not in l:
                         g.append(n)
         if g:
-            prt("##### BLOCK FORK 2 #####")
-            print tmp
-            print g
+            print "##### BLOCK FORK 2 #####"
             self.respond(rchoice(g))
             return True
         return False
 
     def firstTurn(self):
         if self.turn == 1:
-            prt("##### FIRST TURN #####")
+            print "##### FIRST TURN #####"
             self.respond(rchoice([0, 2, 6, 8]))
             return True
         return False
@@ -132,21 +129,21 @@ class TictactoeKiller(object):
                         (6, 2),
                         (8, 0)]:
                     if my_case == m:
-                        prt("##### THIRD TURN 1 #####")
+                        print "##### THIRD TURN 1 #####"
                         self.respond(pos)
                         return True
             elif opp_case in (0, 2, 6, 8):
                 pos = [0, 2, 6, 8]
                 pos.remove(opp_case)
                 pos.remove(my_case)
-                prt("##### THIRD TURN 2 #####")
+                print "##### THIRD TURN 2 #####"
                 self.respond(rchoice(pos))
                 return True
         return False
 
     def center(self):
         if self.tray[4] == 0:
-            prt("##### CENTER #####")
+            print "##### CENTER #####"
             self.respond(4)
             return True
         return False
@@ -163,7 +160,7 @@ class TictactoeKiller(object):
             if self.tray[a] == self.opp and self.tray[b] == 0:
                 r.append(b)
         if r:
-            prt("##### OPPOSITE CORNER #####")
+            print "##### OPPOSITE CORNER #####"
             self.respond(rchoice(r))
             return True
         return False
@@ -175,7 +172,7 @@ class TictactoeKiller(object):
             if self.tray[n] == 0:
                 r.append(n)
         if r:
-            prt("##### CORNER #####")
+            print "##### CORNER #####"
             self.respond(rchoice(r))
             return True
         return False
@@ -187,26 +184,21 @@ class TictactoeKiller(object):
             if self.tray[n] == 0:
                 r.append(n)
         if r:
-            prt("##### SIDE #####")
+            print "##### SIDE #####"
             self.respond(rchoice(r))
             return True
         return False
 
-    def run(self):
+    def render_GET(self, req):
+        self.referee = req.args.get("Referee", [None])[0]
+        self.moveId = req.args.get("MoveId", [None])[0]
+        self.game = req.args.get("Game", [None])[0]
+        self.tray = map(int, req.args.get("Tray", [[]])[0])
+        self.turn = int(req.args.get("Turn", [0])[0])
+        self.me = 1 if self.turn % 2 else 2
+        self.opp = 2 if self.turn % 2 else 1
         if self.referee is not None:
-            actions = [
-                self.tryWin,
-                self.tryBlock,
-                self.tryFork,
-                self.tryBlockFork,
-                self.firstTurn,
-                self.specialThirdTurn,
-                self.center,
-                self.oppositeCorner,
-                self.emptyCorner,
-                self.emptySide
-            ]
-            for action in actions:
+            for action in self.actions:
                 if action():
                     return "TicTacToe"
         return "NoTicTacToe"
