@@ -1,4 +1,6 @@
 tournoyons
 ==========
 
-Tournoyons bot
+/tictactoe		TicTacToe bot
+/chifoumi		Chifoumi bot
+/static/avatar.png	avatar

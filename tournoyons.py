@@ -5,8 +5,8 @@ from flask import Flask
 app = Flask(__name__)
 from flask import request
 
-from Chifoumi import ChifoumiKiller
-from Tictactoe import TictactoeKiller
+from chifoumi import ChifoumiKiller
+from tictactoe import TictactoeKiller
 
 
 @app.route("/chifoumi")
