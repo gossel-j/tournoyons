@@ -3,11 +3,12 @@
 from random import choice as rchoice
 from urllib import urlencode
 
+from twisted.web.client import Agent
 from twisted.web.resource import Resource
+from twisted.internet import reactor
 
 
 class TictactoeKiller(Resource):
-    isLeaf = True
     winPos = [
         (0, 1, 2),
         (3, 4, 5),
@@ -19,8 +20,8 @@ class TictactoeKiller(Resource):
         (2, 4, 6)
     ]
 
-    def __init__(self, agent):
-        self.agent = agent
+    def __init__(self):
+        self.agent = Agent(reactor)
         self.actions = [
             self.tryWin,
             self.tryBlock,
@@ -202,3 +203,6 @@ class TictactoeKiller(Resource):
                 if action():
                     return "TicTacToe"
         return "NoTicTacToe"
+
+
+resource = TictactoeKiller()

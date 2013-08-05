@@ -1,2 +1,2 @@
 #!/bin/sh
-exec dtach -A .socket ./tournoyons
+exec dtach -A .socket ./tournoyons.py
