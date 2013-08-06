@@ -3,9 +3,8 @@
 from random import choice as rchoice
 from urllib import urlencode
 
-from twisted.web.client import Agent
+from twisted.web.client import getPage
 from twisted.web.resource import Resource
-from twisted.internet import reactor
 
 
 class TictactoeKiller(Resource):
@@ -20,24 +19,9 @@ class TictactoeKiller(Resource):
         (2, 4, 6)
     ]
 
-    def __init__(self):
-        self.agent = Agent(reactor)
-        self.actions = [
-            self.tryWin,
-            self.tryBlock,
-            self.tryFork,
-            self.tryBlockFork,
-            self.firstTurn,
-            self.specialThirdTurn,
-            self.center,
-            self.oppositeCorner,
-            self.emptyCorner,
-            self.emptySide
-        ]
-
     def respond(self, pos):
         if self.referee is not None:
-            self.agent.request('GET', '%s?%s' % (self.referee, urlencode({"MoveId": self.moveId, "Game": self.game, "Value": pos + 1})))
+            getPage('%s?%s' % (self.referee, urlencode({"MoveId": self.moveId, "Game": self.game, "Value": pos + 1})))
 
     def tryComplete(self, me, tray):
         r = []
@@ -198,8 +182,20 @@ class TictactoeKiller(Resource):
         self.turn = int(req.args.get("Turn", [0])[0])
         self.me = 1 if self.turn % 2 else 2
         self.opp = 2 if self.turn % 2 else 1
+        actions = [
+            self.tryWin,
+            self.tryBlock,
+            self.tryFork,
+            self.tryBlockFork,
+            self.firstTurn,
+            self.specialThirdTurn,
+            self.center,
+            self.oppositeCorner,
+            self.emptyCorner,
+            self.emptySide
+        ]
         if self.referee is not None:
-            for action in self.actions:
+            for action in actions:
                 if action():
                     return "TicTacToe"
         return "NoTicTacToe"

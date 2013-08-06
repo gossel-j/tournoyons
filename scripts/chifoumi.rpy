@@ -3,9 +3,8 @@
 from random import randint
 from urllib import urlencode
 
-from twisted.web.client import Agent
+from twisted.web.client import getPage
 from twisted.web.resource import Resource
-from twisted.internet import reactor
 
 
 class ChifoumiKiller(Resource):
@@ -14,8 +13,7 @@ class ChifoumiKiller(Resource):
         moveId = req.args.get("MoveId", [None])[0]
         game = req.args.get("Game", [None])[0]
         if referee is not None:
-            agent = Agent(reactor)
-            agent.request('GET', '%s?%s' % (referee, urlencode({"MoveId": moveId, "Game": game, "Value": randint(1, 3)})))
+            getPage('%s?%s' % (referee, urlencode({"MoveId": moveId, "Game": game, "Value": randint(1, 3)})))
         print "Chifoumi"
         return "Chifoumi"
 
