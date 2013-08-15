@@ -4,6 +4,7 @@ Description=Tournoyons server
 [Service]
 User=jb
 ExecStart=/home/jb/tournoyons/tournoyons.py
+WorkingDirectory=/home/jb/tournoyons
 
 [Install]
 WantedBy=multi-user.target
