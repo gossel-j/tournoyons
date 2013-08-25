@@ -14,8 +14,5 @@ class ChifoumiKiller(Resource):
         game = req.args.get("Game", [None])[0]
         if referee is not None:
             getPage('%s?%s' % (referee, urlencode({"MoveId": moveId, "Game": game, "Value": randint(1, 3)})))
-        print "Chifoumi"
         return "Chifoumi"
-
-
 resource = ChifoumiKiller()

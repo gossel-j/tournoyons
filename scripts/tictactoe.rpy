@@ -199,6 +199,4 @@ class TictactoeKiller(Resource):
                 if action():
                     return "TicTacToe"
         return "NoTicTacToe"
-
-
 resource = TictactoeKiller()
