@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from random import choice as rchoice
-from urllib import urlencode
 
-from twisted.web.client import getPage
-from twisted.web.resource import Resource
+import requests
 
 
-class TictactoeKiller(Resource):
+class TictactoeKiller(object):
     winPos = [
         (0, 1, 2),
         (3, 4, 5),
@@ -19,9 +17,18 @@ class TictactoeKiller(Resource):
         (2, 4, 6)
     ]
 
+    def __init__(self, args):
+        self.referee = args.get("Referee")
+        self.moveId = args.get("MoveId")
+        self.game = args.get("Game")
+        self.tray = map(int, args.get("Tray", []))
+        self.turn = int(args.get("Turn", 0))
+        self.me = 1 if self.turn % 2 else 2
+        self.opp = 2 if self.turn % 2 else 1
+
     def respond(self, pos):
         if self.referee is not None:
-            getPage('%s?%s' % (self.referee, urlencode({"MoveId": self.moveId, "Game": self.game, "Value": pos + 1})))
+            requests.get(self.referee, params={"MoveId": self.moveId, "Game": self.game, "Value": pos + 1})
 
     def tryComplete(self, me, tray):
         r = []
@@ -174,14 +181,7 @@ class TictactoeKiller(Resource):
             return True
         return False
 
-    def render_GET(self, req):
-        self.referee = req.args.get("Referee", [None])[0]
-        self.moveId = req.args.get("MoveId", [None])[0]
-        self.game = req.args.get("Game", [None])[0]
-        self.tray = map(int, req.args.get("Tray", [[]])[0])
-        self.turn = int(req.args.get("Turn", [0])[0])
-        self.me = 1 if self.turn % 2 else 2
-        self.opp = 2 if self.turn % 2 else 1
+    def render(self):
         actions = [
             self.tryWin,
             self.tryBlock,
@@ -199,4 +199,3 @@ class TictactoeKiller(Resource):
                 if action():
                     return "TicTacToe"
         return "NoTicTacToe"
-resource = TictactoeKiller()

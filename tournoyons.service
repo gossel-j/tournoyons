@@ -3,7 +3,7 @@ Description=Tournoyons server
 
 [Service]
 User=jb
-ExecStart=/home/jb/tournoyons/tournoyons.py
+ExecStart=/usr/bin/gunicorn -b :8000 -w 4 tournoyons:app
 WorkingDirectory=/home/jb/tournoyons
 
 [Install]
