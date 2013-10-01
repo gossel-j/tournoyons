@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from random import choice as rchoice
-from urllib import urlencode
 
-from twisted.web.client import getPage
+from killer import Killer
 
 
 def tmp_success(d):
@@ -13,7 +12,7 @@ def tmp_error(reason):
     print "ERROR", reason
 
 
-class TictactoeKiller(object):
+class TictactoeKiller(Killer):
     winPos = [
         (0, 1, 2),
         (3, 4, 5),
@@ -36,7 +35,7 @@ class TictactoeKiller(object):
 
     def respond(self, pos):
         if self.referee is not None:
-            d = getPage("%s?%s" % (self.referee, urlencode({"MoveId": self.moveId, "Game": self.game, "Value": pos + 1})), method="HEAD")
+            d = self.sendResponse(self.referee, {"MoveId": self.moveId, "Game": self.game, "Value": pos + 1})
             d.addCallbacks(tmp_success, tmp_error)
 
     def tryComplete(self, me, tray):
