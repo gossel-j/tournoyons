@@ -10,4 +10,4 @@ class Killer(object):
     _agent = Agent(reactor)
 
     def sendResponse(self, referee, data={}):
-        return self._agent.request("GET", "%s?%s" % (referee, urlencode(data)))
+        return self._agent.request("GET", str("%s?%s" % (referee, urlencode(data))))
