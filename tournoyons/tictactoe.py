@@ -5,13 +5,6 @@ from random import choice as rchoice
 from killer import Killer
 
 
-def tmp_success(d):
-    print "SUCCESS"
-
-def tmp_error(reason):
-    print "ERROR", reason
-
-
 class TictactoeKiller(Killer):
     winPos = [
         (0, 1, 2),
@@ -35,8 +28,7 @@ class TictactoeKiller(Killer):
 
     def respond(self, pos):
         if self.referee is not None:
-            d = self.sendResponse(self.referee, {"MoveId": self.moveId, "Game": self.game, "Value": pos + 1})
-            d.addCallbacks(tmp_success, tmp_error)
+            self.sendResponse(self.referee, {"MoveId": self.moveId, "Game": self.game, "Value": pos + 1})
 
     def tryComplete(self, me, tray):
         r = []
