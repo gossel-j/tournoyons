@@ -6,6 +6,13 @@ from urllib import urlencode
 from twisted.web.client import getPage
 
 
+def tmp_success(d):
+    print "SUCCESS"
+
+def tmp_error(reason):
+    print "ERROR", reason
+
+
 class TictactoeKiller(object):
     winPos = [
         (0, 1, 2),
@@ -29,9 +36,8 @@ class TictactoeKiller(object):
 
     def respond(self, pos):
         if self.referee is not None:
-            url = "%s?%s" % (self.referee, urlencode({"MoveId": self.moveId, "Game": self.game, "Value": pos + 1}))
-            print url
-            getPage(url)
+            d = getPage("%s?%s" % (self.referee, urlencode({"MoveId": self.moveId, "Game": self.game, "Value": pos + 1})))
+            d.addCallbacks(tmp_success, tmp_error)
 
     def tryComplete(self, me, tray):
         r = []
