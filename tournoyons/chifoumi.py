@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from random import randint
+from urllib import urlencode
 
-import requests
+from twisted.web.client import getPage
 
 
 class ChifoumiKiller(object):
@@ -13,5 +14,5 @@ class ChifoumiKiller(object):
 
     def render(self):
         if self.referee is not None:
-            requests.get(self.referee, params={"MoveId": self.moveId, "Game": self.game, "Value": randint(1, 3)})
+            getPage("%s?%s" % (self.referee, urlencode({"MoveId": self.moveId, "Game": self.game, "Value": randint(1, 3)})))
         return "Chifoumi"

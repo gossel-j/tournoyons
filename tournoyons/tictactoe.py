@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from random import choice as rchoice
+from urllib import urlencode
 
-import requests
+from twisted.web.client import getPage
 
 
 class TictactoeKiller(object):
@@ -28,7 +29,7 @@ class TictactoeKiller(object):
 
     def respond(self, pos):
         if self.referee is not None:
-            requests.get(self.referee, params={"MoveId": self.moveId, "Game": self.game, "Value": pos + 1})
+            getPage("%s?%s" % (self.referee, urlencode({"MoveId": self.moveId, "Game": self.game, "Value": pos + 1})))
 
     def tryComplete(self, me, tray):
         r = []
