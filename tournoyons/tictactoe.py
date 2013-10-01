@@ -29,7 +29,9 @@ class TictactoeKiller(object):
 
     def respond(self, pos):
         if self.referee is not None:
-            getPage("%s?%s" % (self.referee, urlencode({"MoveId": self.moveId, "Game": self.game, "Value": pos + 1})))
+            url = "%s?%s" % (self.referee, urlencode({"MoveId": self.moveId, "Game": self.game, "Value": pos + 1}))
+            print url
+            getPage(url)
 
     def tryComplete(self, me, tray):
         r = []
