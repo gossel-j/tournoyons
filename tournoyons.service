@@ -3,7 +3,7 @@ Description=Tournoyons server
 
 [Service]
 User=jb
-ExecStart=/usr/bin/python2.7 run.py
+ExecStart=/usr/bin/python2.7 ./run_tournoyons.py
 WorkingDirectory=/home/jb/tournoyons
 
 [Install]
