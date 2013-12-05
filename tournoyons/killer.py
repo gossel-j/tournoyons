@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from urllib import urlencode
-
-from twisted.internet import reactor
-from twisted.web.client import Agent
+import requests
 
 
 class Killer(object):
-    _agent = Agent(reactor)
+    _session = requests.Session()
 
     def sendResponse(self, referee, data={}):
-        return self._agent.request("GET", str("%s?%s" % (referee, urlencode(data))))
+        return self._session.get(referee, params=data)

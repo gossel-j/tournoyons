@@ -22,6 +22,6 @@ def killer_page(game):
         'chifoumi': ChifoumiKiller
     }
     if game in killers:
-        return killers[game](request.args).render()
+        return killers[game](request.args)()
     else:
         abort(404)
