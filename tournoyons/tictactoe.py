@@ -181,7 +181,7 @@ class TictactoeKiller(Killer):
             return True
         return False
 
-    def render(self):
+    def __call__(self):
         actions = [
             self.tryWin,
             self.tryBlock,
