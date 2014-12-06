@@ -81,7 +81,7 @@ function handler(req, res, next) {
   var turn = Number(req.query.Turn);
   if (turn % 2 == 0) tray = _.map(tray, function(v) {return [0, 2, 1][v]});
   if (turn == 1) {
-    answer.send(_.sample([0, 2, 6, 8]));
+    answer.send(_.sample([1, 3, 7, 9]));
   } else {
     var ret = minimaxMe(tray, getEmptyPos(tray), true);
     console.log(ret);
