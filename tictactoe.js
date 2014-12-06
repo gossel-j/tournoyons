@@ -32,7 +32,7 @@ function getEmptyPos(map) {
 function minimaxMe(node, emptyPos) {
   console.log("Start opp turn");
   var val = nodeValue(node);
-  if (emptyPos.length == 0 || val != 0)
+  if (emptyPos.length <= 0 || val != 0)
     return {val: val};
   var best = {val: -Infinity};
   for (var n = 0; n < emptyPos.length; n++) {
@@ -53,7 +53,7 @@ function minimaxMe(node, emptyPos) {
 function minimaxOpp(node, emptyPos) {
   console.log("Start my turn");
   var val = nodeValue(node);
-  if (emptyPos.length == 0 || val != 0)
+  if (emptyPos.length <= 0 || val != 0)
     return {val: val};
   var best = {val: Infinity};
   for (var n = 0; n < emptyPos.length; n++) {
