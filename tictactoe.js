@@ -76,7 +76,7 @@ function handler(req, res, next) {
   if (turn % 2 == 0) tray = _.map(tray, function(v) {return [0, 2, 1][v]});
   var turn = minimaxMe(tray, getEmptyPos(tray));
   console.log(turn);
-  answer.send(turn.pos);
+  answer.send(turn.pos + 1);
   res.end("TicTacToe");
 }
 
