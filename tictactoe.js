@@ -41,7 +41,7 @@ function minimaxMe(node, emptyPos, test) {
     newTray[p] = 1;
     var turn = minimaxOpp(newTray, newEmptyPos);
     if (test)
-      console.log(turn);
+      console.log("Turn %d, %s", p, turn);
     if (turn.val == Infinity)
       return {val: val, pos: p};
     if (turn.val > best.val)
