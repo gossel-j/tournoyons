@@ -15,8 +15,8 @@ var winPos = [
 function nodeValue(map) {
   for (p in winPos) {
     var val = _.map(p, function(v) {return map[v]});
-    if (val == [1, 1, 1]) return Infinity;
-    if (val == [2, 2, 2]) return -Infinity;
+    if (_.isEqual(val, [1, 1, 1])) return Infinity;
+    if (_.isEqual(val, [2, 2, 2])) return -Infinity;
   }
   return 0;
 }
@@ -42,11 +42,8 @@ function minimaxMe(node, emptyPos, test) {
     var turn = minimaxOpp(newTray, newEmptyPos);
     if (test)
       console.log(turn);
-    if (turn.val == Infinity) {
-      console.log("I CAN WIN !");
-      console.log(turn);
+    if (turn.val == Infinity)
       return {val: val, pos: p};
-    }
     if (turn.val > best.val)
       best = {val: val, pos: p};
   }
@@ -55,8 +52,6 @@ function minimaxMe(node, emptyPos, test) {
 
 function minimaxOpp(node, emptyPos) {
   var val = nodeValue(node);
-  if (val != 0)
-    console.log("VAL %s", val);
   if (emptyPos.length <= 0 || val != 0)
     return {val: val};
   var best = {val: Infinity};
@@ -66,11 +61,8 @@ function minimaxOpp(node, emptyPos) {
     var p = newEmptyPos.splice(n, 1)[0];
     newTray[p] = 2;
     var turn = minimaxMe(newTray, newEmptyPos);
-    if (turn.val == -Infinity) {
-      console.log("HE CAN WIN !");
-      console.log(turn);
+    if (turn.val == -Infinity)
       return {val: val, pos: p};
-    }
     if (turn.val < best.val)
       best = {val: val, pos: p};
   }
