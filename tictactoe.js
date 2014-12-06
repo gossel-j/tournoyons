@@ -37,7 +37,7 @@ function minimaxMe(node, emptyPos, test) {
   for (var n = 0; n < emptyPos.length; n++) {
     var newTray = _.clone(node);
     var newEmptyPos = _.clone(emptyPos);
-    var p = newEmptyPos.splice(n, 1);
+    var p = newEmptyPos.splice(n, 1)[0];
     newTray[p] = 1;
     var turn = minimaxOpp(newTray, newEmptyPos);
     if (test)
@@ -58,7 +58,7 @@ function minimaxOpp(node, emptyPos) {
   for (var n = 0; n < emptyPos.length; n++) {
     var newTray = _.clone(node);
     var newEmptyPos = _.clone(emptyPos);
-    var p = newEmptyPos.splice(n, 1);
+    var p = newEmptyPos.splice(n, 1)[0];
     newTray[p] = 2;
     var turn = minimaxMe(newTray, newEmptyPos);
     if (turn.val == -Infinity)
