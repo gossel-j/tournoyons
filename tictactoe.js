@@ -29,7 +29,7 @@ function getEmptyPos(map) {
   return pos;
 }
 
-function minimaxMe(node, emptyPos) {
+function minimaxMe(node, emptyPos, test) {
   var val = nodeValue(node);
   if (emptyPos.length <= 0 || val != 0)
     return {val: val};
@@ -40,6 +40,8 @@ function minimaxMe(node, emptyPos) {
     var p = newEmptyPos.splice(n, 1);
     newTray[p] = 1;
     var turn = minimaxOpp(newTray, newEmptyPos);
+    if (test)
+      console.log(turn);
     if (turn.val == Infinity)
       return {val: val, pos: p};
     if (turn.val > best.val)
@@ -72,9 +74,6 @@ function handler(req, res, next) {
   var tray = _.map(req.query.Tray, Number);
   var turn = Number(req.query.Turn);
   if (turn % 2 == 0) tray = _.map(tray, function(v) {return [0, 2, 1][v]});
-  console.log(turn);
-  console.log(tray);
-  console.log(getEmptyPos(tray));
   var ret = minimaxMe(tray, getEmptyPos(tray));
   console.log(ret);
   answer.send(ret.pos + 1);
