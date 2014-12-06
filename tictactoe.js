@@ -42,8 +42,11 @@ function minimaxMe(node, emptyPos, test) {
     var turn = minimaxOpp(newTray, newEmptyPos);
     if (test)
       console.log(turn);
-    if (turn.val == Infinity)
+    if (turn.val == Infinity) {
+      console.log("I CAN WIN !");
+      console.log(turn);
       return {val: val, pos: p};
+    }
     if (turn.val > best.val)
       best = {val: val, pos: p};
   }
@@ -61,8 +64,11 @@ function minimaxOpp(node, emptyPos) {
     var p = newEmptyPos.splice(n, 1)[0];
     newTray[p] = 2;
     var turn = minimaxMe(newTray, newEmptyPos);
-    if (turn.val == -Infinity)
+    if (turn.val == -Infinity) {
+      console.log("HE CAN WIN !");
+      console.log(turn);
       return {val: val, pos: p};
+    }
     if (turn.val < best.val)
       best = {val: val, pos: p};
   }
@@ -79,7 +85,7 @@ function handler(req, res, next) {
   } else {
     var ret = minimaxMe(tray, getEmptyPos(tray), true);
     console.log(ret);
-    answer.send(ret.pos + 1);    
+    answer.send(ret.pos + 1);
   }
   res.end("TicTacToe");
 }
