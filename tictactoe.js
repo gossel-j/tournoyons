@@ -55,6 +55,8 @@ function minimaxMe(node, emptyPos, test) {
 
 function minimaxOpp(node, emptyPos) {
   var val = nodeValue(node);
+  if (val != 0)
+    console.log("VAL %s", val);
   if (emptyPos.length <= 0 || val != 0)
     return {val: val};
   var best = {val: Infinity};
