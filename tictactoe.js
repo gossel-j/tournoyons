@@ -45,7 +45,7 @@ function minimaxMe(node, emptyPos, test) {
     if (turn.val == Infinity)
       return {val: val, pos: p};
     if (turn.val > best.val)
-      best = {turn: val, pos: p};
+      best = {val: val, pos: p};
   }
   return best;
 }
@@ -64,7 +64,7 @@ function minimaxOpp(node, emptyPos) {
     if (turn.val == -Infinity)
       return {val: val, pos: p};
     if (turn.val < best.val)
-      best = {turn: val, pos: p};
+      best = {val: val, pos: p};
   }
   return best;
 }
