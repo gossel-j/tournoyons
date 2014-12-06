@@ -15,6 +15,7 @@ var winPos = [
 function nodeValue(map) {
   for (p in winPos) {
     var val = _.map(p, function(v) {return map[v]});
+    console.log(val);
     if (_.isEqual(val, [1, 1, 1])) return Infinity;
     if (_.isEqual(val, [2, 2, 2])) return -Infinity;
   }
@@ -52,7 +53,6 @@ function minimaxMe(node, emptyPos, test) {
 
 function minimaxOpp(node, emptyPos) {
   var val = nodeValue(node);
-  if (val != 0) console.log(val);
   if (emptyPos.length <= 0 || val != 0)
     return {val: val};
   var best = {val: Infinity};
