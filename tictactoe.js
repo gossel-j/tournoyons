@@ -13,7 +13,7 @@ var winPos = [
 ];
 
 function nodeValue(map) {
-  for (n in winPos) {
+  for (var n = 0; n < winPos.length; n++) {
     var val = _.map(winPos[n], function(v) {return map[v]});
     if (_.isEqual(val, [1, 1, 1])) return Infinity;
     if (_.isEqual(val, [2, 2, 2])) return -Infinity;
